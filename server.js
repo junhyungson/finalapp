@@ -9,6 +9,13 @@ app.get('/', (request, response) => {
 });
 app.get('/info', (request, response) => {
     response.send('my info page');
+});
+
+app.get('/404', (request, response) => {
+    response.send({
+        error: "page not found";
+        
+    })
 })
 app.listen(port, () => {
     console.log(`server is up on the port ${port}`);
