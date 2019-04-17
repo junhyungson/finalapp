@@ -11,34 +11,44 @@ app.set('view engine', 'hbs');
 app.use(express.static(__dirname + '/public'));
 
 app.get('/', (request, response) => {
-    response.render('main.hbs');
+    get_capital();
+    response.render('main.hbs', {
+        getheaderhours: result,
+    }
+    );
 });
+// response.render('weather.hbs', {
+//     title: 'Weather Page',
+//     welcome: 'Welcome to my weather page!',
+//     Author: 'Wally Weather',
+//     weather: weather
+// });
+// var result='';
+// var country = 'canada'
+// var errormessage = ''
+// var getWeather = async function()
+// {
+//     try{
+//         capitalResult =  await from_api.getcapital(country);
+//         weatherResult = await from_api.getWeather(capitalResult,country);
+//         result = `the weather in ${capitalResult}, capital of ${country} is 
+//         ${JSON.stringify(Weatherresult.temp)} with wind speed of ${JSON.stringify(Weatherresult.wind)}`;
+//     }
+//     catch(error) {
+//         result = error;
+//     }
+// }
 
 var result='';
-var country = 'canada'
-var errormessage = ''
-var getWeather = async function()
-{
-    try{
-        capitalResult =  await from_api.getcapital(country);
-        weatherResult = await from_api.getWeather(capitalResult,country);
-        result = `the weather in ${capitalResult}, capital of ${country} is 
-        ${JSON.stringify(Weatherresult.temp)} with wind speed of ${JSON.stringify(Weatherresult.wind)}`;
-    }
-    catch(error) {
-        result = error;
-    }
-}
-var result='';
-var country = 'canada'
+var country = 'mars'
 var getcapital = ((country) => {
     return new Promise((resolve, reject) =>{
         request({
-            // https://restcountries.eu/rest/v2/name/canada?fullText=true
-            url: `https://restcountries.eu/rest/v2/name/` + encodeURIComponent(country) + `?fullText=true`,
+            // // https://restcountries.eu/rest/v2/name/canada?fullText=true
+            // url: `https://restcountries.eu/rest/v2/name/` + encodeURIComponent(country) + `?fullText=true`,
+            url: `https://images-api.nasa.gov/search?q=${country}`,
             json: true
         }, (error, response, body) => {
-            // console.log(body)
             if(error) {
                 reject(error);
             }
@@ -46,44 +56,78 @@ var getcapital = ((country) => {
             {
                 reject(body.message);
             }
-            
             else
             {
-                resolve(body[0].capital);
+            resolve(body.collection.items[0].links[0]);
+            console.log(body.collection.items[0].links[0].href);
             }
         });
     });
 });
 
-var getWeather = ((city, country) => {
-    return new Promise((resolve, reject) => {
+num = 5
+var getcards = ((nm) => {
+    return new Promise((resolve, reject) =>{
         request({
-            // https://api.openweathermap.org/data/2.5/weather?q=ottawa,canada&appid=2264e3b73dc094131aeb3adfa3d71b61
-            url: `https://api.openweathermap.org/data/2.5/weather?q=`+ encodeURIComponent(city) +',' + encodeURIComponent(country) + `&appid=2264e3b73dc094131aeb3adfa3d71b61`,
-            json:true
+            // // https://restcountries.eu/rest/v2/name/canada?fullText=true
+            // url: `https://restcountries.eu/rest/v2/name/` + encodeURIComponent(country) + `?fullText=true`,
+            url: `https://deckofcardsapi.com/api/deck/new/shuffle/?deck_count=${num}`,
+            json: true
         }, (error, response, body) => {
-            resolve({
-                temp: body.main.temp,
-                wind: body.wind.speed
-                
-            });
+            if(error) {
+                reject(error);
+            }
+            else if (body.status == '404')
+            {
+                reject(body.message);
+            }
+            else
+            {
+            // resolve(body.collection.items[0].links[0]);
+            // console.log(body.collection.items[0].links[0].href);
+            }
         });
     });
-})
-getcapital(country).then((capital) =>{
-    getWeather(capital, country).then((weather) =>{
-        result = `the weather in ${capital}, capital of ${country} is 
-        ${JSON.stringify(weather.temp)} with wind speed of ${JSON.stringify(weather.wind)}`;
-    })
-}).catch((error) =>{
+});
+
+getcapital(country).then((nasaresult)=>{
+    result = nasaresult;
+}).catch((error)=>{
     result = error;
 })
+
+
 app.get('/weather', (request, response)=> {
-    // getWeather();
     response.render('weather.hbs', {
-        weather: result
+        weather: result,
+        title: result
     });
-});
+})
+
+// var getWeather = ((city, country) => {
+//     return new Promise((resolve, reject) => {
+//         request({
+//             // https://api.openweathermap.org/data/2.5/weather?q=ottawa,canada&appid=2264e3b73dc094131aeb3adfa3d71b61
+//             url: `https://api.openweathermap.org/data/2.5/weather?q=`+ encodeURIComponent(city) +',' + encodeURIComponent(country) + `&appid=2264e3b73dc094131aeb3adfa3d71b61`,
+//             json:true
+//         }, (error, response, body) => {
+//             resolve({
+//                 temp: body.main.temp,
+//                 wind: body.wind.speed
+//             });
+//         });
+//     });
+// });
+// getcapital(country).then((capital) =>{
+//     getWeather(capital, country).then((weather) =>{
+//         result = `the weather in ${capital}, capital of ${country} is 
+//         ${JSON.stringify(weather.temp)} with wind speed of ${JSON.stringify(weather.wind)}`;
+//     })
+// }).catch((error) =>{
+//     result = error;
+// })
+
+;
 
 app.get('/info', (request, response) => {
     response.send('my info page');
