@@ -13,7 +13,7 @@ app.get('/info', (request, response) => {
 
 app.get('/404', (request, response) => {
     response.send({
-        error: "page not found";
+        error: "page not found"
         
     })
 })
