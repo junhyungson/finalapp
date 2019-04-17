@@ -11,33 +11,9 @@ app.set('view engine', 'hbs');
 app.use(express.static(__dirname + '/public'));
 
 app.get('/', (request, response) => {
-    get_capital();
-    response.render('main.hbs', {
-        getheaderhours: result,
-    }
+    response.render('main.hbs'
     );
 });
-// response.render('weather.hbs', {
-//     title: 'Weather Page',
-//     welcome: 'Welcome to my weather page!',
-//     Author: 'Wally Weather',
-//     weather: weather
-// });
-// var result='';
-// var country = 'canada'
-// var errormessage = ''
-// var getWeather = async function()
-// {
-//     try{
-//         capitalResult =  await from_api.getcapital(country);
-//         weatherResult = await from_api.getWeather(capitalResult,country);
-//         result = `the weather in ${capitalResult}, capital of ${country} is 
-//         ${JSON.stringify(Weatherresult.temp)} with wind speed of ${JSON.stringify(Weatherresult.wind)}`;
-//     }
-//     catch(error) {
-//         result = error;
-//     }
-// }
 
 var result='';
 var country = 'mars'
@@ -65,42 +41,14 @@ var getcapital = ((country) => {
     });
 });
 
-num = 5
-var getcards = ((nm) => {
-    return new Promise((resolve, reject) =>{
-        request({
-            // // https://restcountries.eu/rest/v2/name/canada?fullText=true
-            // url: `https://restcountries.eu/rest/v2/name/` + encodeURIComponent(country) + `?fullText=true`,
-            url: `https://deckofcardsapi.com/api/deck/new/shuffle/?deck_count=${num}`,
-            json: true
-        }, (error, response, body) => {
-            if(error) {
-                reject(error);
-            }
-            else if (body.status == '404')
-            {
-                reject(body.message);
-            }
-            else
-            {
-            // resolve(body.collection.items[0].links[0]);
-            // console.log(body.collection.items[0].links[0].href);
-            }
-        });
-    });
-});
-
 getcapital(country).then((nasaresult)=>{
     result = nasaresult;
 }).catch((error)=>{
     result = error;
 })
 
-
 app.get('/weather', (request, response)=> {
     response.render('weather.hbs', {
-        weather: result,
-        title: result
     });
 })
 
