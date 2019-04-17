@@ -12,7 +12,7 @@ app.use(express.static(__dirname + '/public'));
 
 app.get('/', (request, response) => {
     response.render('main.hbs', {
-
+        image: result
     }
     );
 });
