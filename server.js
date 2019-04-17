@@ -11,10 +11,11 @@ app.set('view engine', 'hbs');
 app.use(express.static(__dirname + '/public'));
 
 app.get('/', (request, response) => {
-    response.render('main.hbs'
+    response.render('main.hbs', {
+
+    }
     );
 });
-
 var result='';
 var country = 'mars'
 var getcapital = ((country) => {
@@ -41,17 +42,41 @@ var getcapital = ((country) => {
     });
 });
 
+num = 5
+var getcards = ((nm) => {
+    return new Promise((resolve, reject) =>{
+        request({
+            // // https://restcountries.eu/rest/v2/name/canada?fullText=true
+            // url: `https://restcountries.eu/rest/v2/name/` + encodeURIComponent(country) + `?fullText=true`,
+            url: `https://deckofcardsapi.com/api/deck/new/shuffle/?deck_count=${num}`,
+            json: true
+        }, (error, response, body) => {
+            if(error) {
+                reject(error);
+            }
+            else if (body.status == '404')
+            {
+                reject(body.message);
+            }
+            else
+            {
+            resolve(body.collection.items[0].links[0]);
+            }
+        });
+    });
+});
+
 getcapital(country).then((nasaresult)=>{
     result = nasaresult;
 }).catch((error)=>{
     result = error;
 })
 
+
 app.get('/weather', (request, response)=> {
     response.render('weather.hbs', {
     });
 })
-
 // var getWeather = ((city, country) => {
 //     return new Promise((resolve, reject) => {
 //         request({
