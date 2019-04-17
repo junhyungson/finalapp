@@ -31,7 +31,7 @@ var getWeather = async function()
 }
 app.get('/weather', async (request, response)=> {
     getWeather();
-// console.log(result);
+console.log(result);
     response.render('weather.hbs', {
         weather: result
     });
